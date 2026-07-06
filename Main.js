@@ -45,47 +45,57 @@ function runSEOImport() {
 }
 function runAllReports() {
 
-  const start = new Date();
+    const start = new Date();
 
-  writeLog("*** SEO PIPELINE START ***");
-  writeLog("SEO PIPELINE STARTED");
+    try {
 
-  try {
+        writeLog("======================================");
+        writeLog("SEO DASHBOARD v3 PIPELINE START");
+        writeLog("======================================");
 
-    writeLog("1. Search Console Import");
-    runSEOImport();
+        Repository.clearCache();
 
-    writeLog("2. Keyword Latest");
-    generateKeywordLatest();
+        writeLog("1/9 Search Console Import");
+        runSEOImport();
 
-    writeLog("3. Weekly Summary");
-    generateWeeklySummary();
+        writeLog("2/9 Keyword Latest");
+        generateKeywordLatest();
 
-    writeLog("4. Keyword Movement");
-    generateKeywordMovement();
+        writeLog("3/9 Weekly Summary");
+        generateWeeklySummary();
 
-    writeLog("5. Dashboard Data");
-    generateDashboardData();
+        writeLog("4/9 Keyword Movement");
+        generateKeywordMovement();
 
-    writeLog("6. Analytics");
-    generateAnalytics();
+        writeLog("5/9 KPI");
+        calculateKPIs();
 
-    writeLog("7. DashboardV3");
-generateDashboardV3();
+        writeLog("6/9 Dashboard Data");
+        generateDashboardData();
 
-    const seconds = ((new Date()) - start) / 1000;
+        writeLog("7/9 Analytics");
+        generateAnalytics();
 
-    writeLog("SEO PIPELINE COMPLETED");
-    writeLog("Execution Time : " + seconds.toFixed(2) + " sec");
-    writeLog("*** SEO PIPELINE END ***");
+        writeLog("8/9 Opportunity Report");
+        generateOpportunityReport();
 
-  } catch(err) {
+        writeLog("9/9 Executive Dashboard");
+        generateDashboard();
 
-    writeLog("PIPELINE FAILED");
-    writeLog(err.stack || err);
+        const seconds = ((new Date()) - start) / 1000;
 
-    throw err;
+        writeLog("--------------------------------------");
+        writeLog("PIPELINE COMPLETED SUCCESSFULLY");
+        writeLog("Execution Time : " + seconds.toFixed(2) + " sec");
+        writeLog("======================================");
 
-  }
+    } catch (err) {
+
+        writeLog("PIPELINE FAILED");
+        writeLog(err.stack || err);
+
+        throw err;
+
+    }
 
 }

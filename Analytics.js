@@ -16,7 +16,13 @@ function generateAnalytics() {
     return;
   }
 
-  const rows = values.slice(1);
+    const rows = values.slice(1);
+    const summary = {
+        improved: 0,
+        declined: 0,
+        newKeywords: 0,
+        lostKeywords: 0
+    };
 
   const improved = [];
   const declined = [];
@@ -35,25 +41,29 @@ function generateAnalytics() {
     const change = Number(r[6]);
     const status = String(r[7]);
 
-    switch(status){
+      switch (status) {
 
-      case "Improved":
-        improved.push(r);
-        break;
+          case "Improved":
+              summary.improved++;
+              improved.push(r);
+              break;
 
-      case "Declined":
-        declined.push(r);
-        break;
+          case "Declined":
+              summary.declined++;
+              declined.push(r);
+              break;
 
-      case "New":
-        newKeywords.push(r);
-        break;
+          case "New":
+              summary.newKeywords++;
+              newKeywords.push(r);
+              break;
 
-      case "Lost":
-        lostKeywords.push(r);
-        break;
+          case "Lost":
+              summary.lostKeywords++;
+              lostKeywords.push(r);
+              break;
 
-    }
+      }
 
     if(!isNaN(oldPos) && !isNaN(newPos)){
 
@@ -76,10 +86,20 @@ function generateAnalytics() {
   improved.sort((a,b)=>Number(b[6])-Number(a[6]));
   declined.sort((a,b)=>Number(a[6])-Number(b[6]));
 
+    newKeywords.sort((a, b) => String(a[1]).localeCompare(String(b[1])));
+    lostKeywords.sort((a, b) => String(a[1]).localeCompare(String(b[1])));
   const output = [];
 
-  output.push(["SEO DASHBOARD V3"]);
-  output.push([]);
+    output.push(["SEO DASHBOARD v3"]);
+    output.push(["Generated", new Date()]);
+    output.push([]);
+
+    output.push(["SUMMARY"]);
+    output.push(["Improved", summary.improved]);
+    output.push(["Declined", summary.declined]);
+    output.push(["New", summary.newKeywords]);
+    output.push(["Lost", summary.lostKeywords]);
+    output.push([]);
 
   /***************************************************
  * TOP 20 WINNERS
@@ -267,8 +287,21 @@ dashboardSheet
     finalOutput.length,
     maxCols
   )
-  .setValues(finalOutput);
+    .setValues(finalOutput);
+    dashboardSheet.getRange("A1:D1")
+        .setFontWeight("bold")
+        .setBackground("#1F4E78")
+        .setFontColor("white");
 
-writeLog("Analytics generated");
+    dashboardSheet.autoResizeColumns(1, maxCols);
+
+    dashboardSheet.setFrozenRows(1);
+
+    writeLog(
+        "Analytics generated | Improved: " + summary.improved +
+        " | Declined: " + summary.declined +
+        " | New: " + summary.newKeywords +
+        " | Lost: " + summary.lostKeywords
+    );
 
 }

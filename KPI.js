@@ -4,62 +4,100 @@
 
 function calculateKPIs() {
 
-  const latest = getLatestRankingDate();
-  const rows = getKeywordsByDate(latest);
+    const latest = getLatestRankingDate();
+    const rows = getKeywordsByDate(latest);
 
-  let top3 = 0;
-  let top10 = 0;
-  let top20 = 0;
-  let top50 = 0;
-  let top100 = 0;
+    if (!rows.length) {
+        writeLog("No ranking data found.");
+        return;
+    }
 
-  let clicks = 0;
-  let impressions = 0;
-  let ctr = 0;
-  let position = 0;
+    let kpi = {
+        keywords: rows.length,
+        top3: 0,
+        top10: 0,
+        top20: 0,
+        top50: 0,
+        top100: 0,
+        clicks: 0,
+        impressions: 0,
+        ctr: 0,
+        position: 0
+    };
 
-  rows.forEach(r => {
+    rows.forEach(function (r) {
 
-    const pos = Number(r[7]);
+        const pos = Number(r[7]) || 0;
 
-    if (pos <= 3) top3++;
-    if (pos <= 10) top10++;
-    if (pos <= 20) top20++;
-    if (pos <= 50) top50++;
-    if (pos <= 100) top100++;
+        if (pos <= 3) kpi.top3++;
+        if (pos <= 10) kpi.top10++;
+        if (pos <= 20) kpi.top20++;
+        if (pos <= 50) kpi.top50++;
+        if (pos <= 100) kpi.top100++;
 
-    clicks += Number(r[4]);
-    impressions += Number(r[5]);
-    ctr += Number(r[6]);
-    position += pos;
+        kpi.clicks += Number(r[4]) || 0;
+        kpi.impressions += Number(r[5]) || 0;
+        kpi.ctr += Number(r[6]) || 0;
+        kpi.position += pos;
 
-  });
+    });
 
-  const avgCTR = rows.length ? ctr / rows.length : 0;
-  const avgPosition = rows.length ? position / rows.length : 0;
+    kpi.avgCTR = kpi.keywords
+        ? +(kpi.ctr / kpi.keywords).toFixed(2)
+        : 0;
 
-  const sheet = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID)
-    .getSheetByName(CONFIG.DASHBOARD_DATA_SHEET);
+    kpi.avgPosition = kpi.keywords
+        ? +(kpi.position / kpi.keywords).toFixed(2)
+        : 0;
 
-  sheet.clearContents();
+    const sheet = SpreadsheetApp
+        .openById(CONFIG.SPREADSHEET_ID)
+        .getSheetByName(CONFIG.DASHBOARD_DATA_SHEET);
 
-  const data = [
-    ["Metric","Value"],
-    ["Date",latest],
-    ["Total Keywords",rows.length],
-    ["Top 3",top3],
-    ["Top 10",top10],
-    ["Top 20",top20],
-    ["Top 50",top50],
-    ["Top 100",top100],
-    ["Clicks",clicks],
-    ["Impressions",impressions],
-    ["Average CTR",avgCTR],
-    ["Average Position",avgPosition]
-  ];
+    sheet.clear();
 
-  sheet.getRange(1,1,data.length,2).setValues(data);
+    const output = [
 
-  writeLog("Dashboard KPIs updated");
+        ["Metric", "Value"],
+
+        ["Date", latest],
+
+        ["Total Keywords", kpi.keywords],
+
+        ["Top 3", kpi.top3],
+
+        ["Top 10", kpi.top10],
+
+        ["Top 20", kpi.top20],
+
+        ["Top 50", kpi.top50],
+
+        ["Top 100", kpi.top100],
+
+        ["Clicks", kpi.clicks],
+
+        ["Impressions", kpi.impressions],
+
+        ["Average CTR", kpi.avgCTR],
+
+        ["Average Position", kpi.avgPosition]
+
+    ];
+
+    sheet.getRange(
+        1,
+        1,
+        output.length,
+        2
+    ).setValues(output);
+
+    sheet.getRange("A1:B1")
+        .setFontWeight("bold")
+        .setBackground("#1F4E78")
+        .setFontColor("white");
+
+    sheet.autoResizeColumns(1, 2);
+
+    writeLog("KPIs calculated");
 
 }

@@ -1,24 +1,29 @@
 /***************************************************
  * GOOGLE ADS CONFIG
  ***************************************************/
-
 const ADS = {
 
-  DEVELOPER_TOKEN: "pGoC5ECDNNpnY0eD2zrQmA",
+    DEVELOPER_TOKEN: "pGoC5ECDNNpnY0eD2zrQmA",
 
-    const CLIENT_ID = "YOUR_CLIENT_ID";
-    const CLIENT_SECRET = "YOUR_CLIENT_SECRET";
-    const REFRESH_TOKEN = "YOUR_REFRESH_TOKEN";
+    CLIENT_ID: PropertiesService
+        .getScriptProperties()
+        .getProperty("GOOGLE_ADS_CLIENT_ID"),
 
-  CUSTOMER_ID: "3690157950",
+    CLIENT_SECRET: PropertiesService
+        .getScriptProperties()
+        .getProperty("GOOGLE_ADS_CLIENT_SECRET"),
 
-  LOGIN_CUSTOMER_ID: "3690157950",
+    REFRESH_TOKEN: PropertiesService
+        .getScriptProperties()
+        .getProperty("GOOGLE_ADS_REFRESH_TOKEN"),
 
-  API_VERSION: "v21"
+    CUSTOMER_ID: "3690157950",
+
+    LOGIN_CUSTOMER_ID: "3690157950",
+
+    API_VERSION: "v21"
 
 };
-
-
 /***************************************************
  * GET ACCESS TOKEN
  ***************************************************/
@@ -140,5 +145,20 @@ function testGoogleAds() {
   Logger.log(response.getResponseCode());
 
   Logger.log(response.getContentText());
+
+}
+function saveGoogleAdsSecrets() {
+
+    const props = PropertiesService.getScriptProperties();
+
+    props.setProperties({
+
+        GOOGLE_ADS_CLIENT_ID: "YOUR_CLIENT_ID",
+
+        GOOGLE_ADS_CLIENT_SECRET: "YOUR_CLIENT_SECRET",
+
+        GOOGLE_ADS_REFRESH_TOKEN: "YOUR_REFRESH_TOKEN"
+
+    });
 
 }

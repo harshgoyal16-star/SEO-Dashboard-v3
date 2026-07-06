@@ -2,51 +2,50 @@
  * REPOSITORY
  ***************************************************/
 
-const Repository = {
+const Repository = (() => {
 
-  getKeywordMovement() {
+    const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
 
-    const sheet = SpreadsheetApp
-      .openById(CONFIG.SPREADSHEET_ID)
-      .getSheetByName(CONFIG.KEYWORD_MOVEMENT_SHEET);
+    const cache = {};
 
-    const data = sheet.getDataRange().getValues();
+    function read(sheetName) {
 
-    if (data.length <= 1)
-      return [];
+        if (cache[sheetName])
+            return cache[sheetName];
 
-    return data.slice(1);
+        const sheet = ss.getSheetByName(sheetName);
 
-  },
+        if (!sheet)
+            return [];
 
-  getKeywordLatest() {
+        const data = sheet.getDataRange().getValues();
 
-    const sheet = SpreadsheetApp
-      .openById(CONFIG.SPREADSHEET_ID)
-      .getSheetByName(CONFIG.KEYWORD_LATEST_SHEET);
+        cache[sheetName] = data.length > 1
+            ? data.slice(1)
+            : [];
 
-    const data = sheet.getDataRange().getValues();
+        return cache[sheetName];
 
-    if (data.length <= 1)
-      return [];
+    }
 
-    return data.slice(1);
+    return {
 
-  },
+        getKeywordMovement() {
+            return read(CONFIG.KEYWORD_MOVEMENT_SHEET);
+        },
 
-  getWeeklySummary() {
+        getKeywordLatest() {
+            return read(CONFIG.KEYWORD_LATEST_SHEET);
+        },
 
-    const sheet = SpreadsheetApp
-      .openById(CONFIG.SPREADSHEET_ID)
-      .getSheetByName(CONFIG.WEEKLY_SUMMARY_SHEET);
+        getWeeklySummary() {
+            return read(CONFIG.WEEKLY_SUMMARY_SHEET);
+        },
 
-    const data = sheet.getDataRange().getValues();
+        clearCache() {
+            Object.keys(cache).forEach(k => delete cache[k]);
+        }
 
-    if (data.length <= 1)
-      return [];
+    };
 
-    return data.slice(1);
-
-  }
-
-};
+})();
