@@ -41,19 +41,48 @@ function generateDashboard() {
         return;
     }
 
-    const latest = data[data.length - 1];
+    const summary = {
+        keywords: 0,
+        clicks: 0,
+        impressions: 0,
+        ctr: 0,
+        position: 0,
+        top3: 0,
+        top10: 0,
+        top20: 0,
+        top50: 0,
+        top100: 0
+    };
+
+    for (let i = 1; i < data.length; i++) {
+
+        summary.keywords += Number(data[i][3]) || 0;
+        summary.clicks += Number(data[i][4]) || 0;
+        summary.impressions += Number(data[i][5]) || 0;
+        summary.ctr += Number(data[i][6]) || 0;
+        summary.position += Number(data[i][7]) || 0;
+
+        summary.top3 += Number(data[i][8]) || 0;
+        summary.top10 += Number(data[i][9]) || 0;
+        summary.top20 += Number(data[i][10]) || 0;
+        summary.top50 += Number(data[i][11]) || 0;
+        summary.top100 += Number(data[i][12]) || 0;
+
+    }
+
+    const count = data.length - 1;
 
     const kpi = [
-        ["Total Keywords", latest[3]],
-        ["Clicks", latest[4]],
-        ["Impressions", latest[5]],
-        ["CTR", latest[6]],
-        ["Avg Position", latest[7]],
-        ["Top 3", latest[8]],
-        ["Top 10", latest[9]],
-        ["Top 20", latest[10]],
-        ["Top 50", latest[11]],
-        ["Top 100", latest[12]]
+        ["Total Keywords", summary.keywords],
+        ["Clicks", summary.clicks],
+        ["Impressions", summary.impressions],
+        ["CTR", (summary.ctr / count).toFixed(2)],
+        ["Avg Position", (summary.position / count).toFixed(2)],
+        ["Top 3", summary.top3],
+        ["Top 10", summary.top10],
+        ["Top 20", summary.top20],
+        ["Top 50", summary.top50],
+        ["Top 100", summary.top100]
     ];
 
     dashboard.getRange(4, 1).setValue("EXECUTIVE KPI")

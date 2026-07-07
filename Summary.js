@@ -160,18 +160,20 @@ function generateWeeklySummary() {
 
   target.clearContents();
 
-  target.appendRow([
-  "Domain",
-  "Query",
-  "Previous Week",
-  "Current Week",
-  "Previous Position",
-  "Current Position",
-  "Change",
-  "Status",
-  "Search Volume",
-  "Impact Score"
-]);
+    target.appendRow([
+        "Domain",
+        "Week",
+        "Keywords",
+        "Clicks",
+        "Impressions",
+        "CTR",
+        "Avg Position",
+        "Top3",
+        "Top10",
+        "Top20",
+        "Top50",
+        "Top100"
+    ]);
 
   const summary = new Map();
 
