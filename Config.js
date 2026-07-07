@@ -15,7 +15,8 @@ const CONFIG = {
   KEYWORD_MOVEMENT_SHEET: "Keyword_Movement",
   DASHBOARD_DATA_SHEET: "Dashboard_Data",
   DASHBOARD_SHEET: "Dashboard",
-  SEARCH_VOLUME_SHEET: "SearchVolume",
+    SEARCH_VOLUME_SHEET: "SearchVolume",
+    ANALYTICS_SHEET: "Analytics",
   LOG_SHEET: "Logs",
 
   // Search Console

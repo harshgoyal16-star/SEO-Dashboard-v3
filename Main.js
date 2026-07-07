@@ -43,59 +43,33 @@ function runSEOImport() {
   writeLog("Inserted : " + totalInserted);
 
 }
-function runAllReports() {
+function runPipeline1() {
 
-    const start = new Date();
+    writeLog("===== PIPELINE 1 START =====");
 
-    try {
+    runSEOImport();
 
-        writeLog("======================================");
-        writeLog("SEO DASHBOARD v3 PIPELINE START");
-        writeLog("======================================");
+    generateKeywordLatest();
 
-        Repository.clearCache();
+    generateWeeklySummary();
 
-        writeLog("1/9 Search Console Import");
-        runSEOImport();
+    generateKeywordMovement();
 
-        writeLog("2/9 Keyword Latest");
-        generateKeywordLatest();
+    writeLog("===== PIPELINE 1 END =====");
 
-        writeLog("3/9 Weekly Summary");
-        generateWeeklySummary();
+}
+function runPipeline2() {
 
-        writeLog("4/9 Keyword Movement");
-        generateKeywordMovement();
+    writeLog("===== PIPELINE 2 START =====");
 
-        writeLog("5/9 KPI");
-        calculateKPIs();
+    calculateKPIs();
 
-        writeLog("6/9 Dashboard Data");
-        generateDashboardData();
+    generateDashboardData();
 
-        writeLog("7/9 Analytics");
-        generateAnalytics();
+    generateAnalytics();
 
-        writeLog("8/9 Opportunity Report");
-        generateOpportunityReport();
+    generateDashboard();
 
-        writeLog("9/9 Executive Dashboard");
-        generateDashboard();
-
-        const seconds = ((new Date()) - start) / 1000;
-
-        writeLog("--------------------------------------");
-        writeLog("PIPELINE COMPLETED SUCCESSFULLY");
-        writeLog("Execution Time : " + seconds.toFixed(2) + " sec");
-        writeLog("======================================");
-
-    } catch (err) {
-
-        writeLog("PIPELINE FAILED");
-        writeLog(err.stack || err);
-
-        throw err;
-
-    }
+    writeLog("===== PIPELINE 2 END =====");
 
 }

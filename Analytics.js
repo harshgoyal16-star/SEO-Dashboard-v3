@@ -7,7 +7,7 @@ function generateAnalytics() {
   const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
 
   const movementSheet = ss.getSheetByName(CONFIG.KEYWORD_MOVEMENT_SHEET);
-  const dashboardSheet = ss.getSheetByName(CONFIG.DASHBOARD_DATA_SHEET);
+    const dashboardSheet = ss.getSheetByName(CONFIG.ANALYTICS_SHEET);
 
   const values = movementSheet.getDataRange().getValues();
 

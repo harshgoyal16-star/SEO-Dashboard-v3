@@ -162,3 +162,12 @@ function saveGoogleAdsSecrets() {
     });
 
 }
+function showGoogleAdsSecrets() {
+
+    const props = PropertiesService.getScriptProperties();
+
+    Logger.log(props.getProperty("GOOGLE_ADS_CLIENT_ID"));
+    Logger.log(props.getProperty("GOOGLE_ADS_CLIENT_SECRET"));
+    Logger.log(props.getProperty("GOOGLE_ADS_REFRESH_TOKEN"));
+
+}
